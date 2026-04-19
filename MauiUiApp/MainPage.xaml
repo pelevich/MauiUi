@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiUiApp.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25">
+
+            <Frame 
+                BackgroundColor="Transparent"
+                HorizontalOptions="Center">
+                <VerticalStackLayout Spacing="10">
+
+                    <Label Text="Указать путь"
+                       FontAttributes="Bold"
+                       FontSize="Small"/>
+
+                    <Entry x:Name="PathEntry"
+                        Placeholder="{Binding SelectedPath}"
+                        MinimumWidthRequest="200"
+                        MaximumWidthRequest="800"
+                        WidthRequest="400"  
+                        IsReadOnly="True"
+                        BackgroundColor="LightGray"
+                        PlaceholderColor="{Binding ColorText}"
+                        HorizontalOptions="FillAndExpand"/>
+
+                    <Grid ColumnDefinitions="*, *" 
+                          ColumnSpacing="10">
+                        <Button x:Name="BrowseButtonFile"
+                            Text="Обзор файлов..."
+                            Grid.Column="0"
+                            Command="{Binding BrowseButtonFileCommand}"
+                            BackgroundColor="#0078D4"
+                            TextColor="White"/>
+                        <Button x:Name="BrowseButtonFolder"
+                            Text="Обзор папки..."
+                            Grid.Column="1"
+                            Command="{Binding BrowseButtonFolderCommand}"
+                            BackgroundColor="#0078D4"
+                            TextColor="White"/>
+                    </Grid>
+
+                    <Button
+                        x:Name="CounterBtn"
+                        Text="Получить данные"
+                        Command="{Binding GetDataCommand}" 
+                        SemanticProperties.Hint="Counts the number of times you click"
+                        HorizontalOptions="Fill" />
+                    <Label 
+                        Text="Прогресс"
+                        HorizontalOptions="Center"
+                        FontSize="20"
+                        IsVisible ="{Binding ShowProgress}"/>
+                    <ProgressBar Progress="{Binding ProgressValue}" 
+                                 HeightRequest="10"
+                                 IsVisible ="{Binding ShowProgress}"/>
+
+                    <VerticalStackLayout Spacing="2" Padding="2" IsVisible ="{Binding ShowProgress}">
+
+                        <Grid ColumnDefinitions="*, *, *"
+                              ColumnSpacing="0">
+                            <Label Text="Название"
+                                FontSize="16"
+                                Grid.Column="0"
+                                   HorizontalOptions="Fill"
+                                   VerticalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center"/>
+                            <Label Text="Количество &#x0a; строк"
+                                FontSize="16"
+                                Grid.Column="1"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Center"
+                                HorizontalTextAlignment="Center"
+                                VerticalTextAlignment="Center"/>
+                            <Label Text="Количество &#x0a; bounding-box'ов &#x0a; элементов"
+                                FontSize="16"
+                                Grid.Column="2"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Center"
+                                HorizontalTextAlignment="Center"
+                                VerticalTextAlignment="Center"/>
+                        </Grid>
+
+                        <VerticalStackLayout 
+                            BindableLayout.ItemsSource="{Binding Blocks}"
+                            Spacing="10">
+
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame
+                                       BackgroundColor="Transparent"
+                                       CornerRadius="5" 
+                                       Padding="10">
+                                        <Label Text="ываы" 
+                                        FontSize="16" />
+                                        <Grid ColumnDefinitions="*, *, *, *, *" 
+                                        ColumnSpacing="2">
+                                            <Label Text="{Binding PdfFileName}"
+                                            FontSize="16"
+                                            Grid.Column="0"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalTextAlignment="Center"/>
+                                            <BoxView Color="Gray" 
+                                             WidthRequest="1" 
+                                             Grid.Column="1"
+                                             VerticalOptions="Fill"
+                                             Margin="2,0"/>
+                                            <Label Text="{Binding Result1}" 
+                                            FontSize="16"
+                                            Grid.Column="2"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalTextAlignment="Center"/>
+                                            <BoxView Color="Gray" 
+                                             WidthRequest="1" 
+                                             Grid.Column="3"
+                                             VerticalOptions="Fill"
+                                             Margin="2,0"/>
+                                            <Label Text="{Binding Result2}" 
+                                            FontSize="16" 
+                                            Grid.Column="4"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalTextAlignment="Center"/>
+                                        </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+
+            </Frame>
+
+        </VerticalStackLayout>
+        
+    </ScrollView>
+
+</ContentPage>
