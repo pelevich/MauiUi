@@ -15,6 +15,7 @@ packages/
 bin/
 obj/
 publish_output/
+MauiUi_exe/
 
 # Ignore Android files
 *.keystore
