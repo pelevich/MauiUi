@@ -5,11 +5,10 @@ namespace MauiUiApp
     public partial class MainPage : ContentPage
     {
 
-        public MainPage()
+        public MainPage(MainViewModel viewModel)
         {
-            var vm = new MainViewModel();
-            BindingContext = vm;
             InitializeComponent();
+            BindingContext = viewModel;
         }
 
     }

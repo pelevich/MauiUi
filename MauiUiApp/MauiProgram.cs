@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using CommunityToolkit.Maui;
+﻿using CommunityToolkit.Maui;
+using MauiUiApp.Application;
+using MauiUiApp.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace MauiUiApp
 {
@@ -17,8 +19,13 @@ namespace MauiUiApp
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            //Зарегистрировал доп сервисы для DI 
+            //Singleton так нужные одни общие данные
+            builder.Services.AddSingleton<StartWebApi>();
+            builder.Services.AddSingleton<MainViewModel>();
+            builder.Services.AddSingleton<MainPage>();
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();

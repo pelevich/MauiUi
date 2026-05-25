@@ -1,21 +1,23 @@
-﻿using CommunityToolkit.Maui.Storage;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MauiUiApp.repository;
-using MauiUiApp.service;
-using MauiUiApp.serviceFactory;
-using System;
-using System.Collections.Generic;
+using MauiUiApp.Application;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO.Pipelines;
-using System.Linq;
-using System.Text;
+using System.Net.Http.Headers;
+using System.Text.Json;
 
 namespace MauiUiApp.ViewModels
 {
     public partial class MainViewModel : ObservableObject
     {
+        private readonly StartWebApi _startWebApi;
+        private readonly ClientApi _client;
+
+        public MainViewModel(StartWebApi startWebApi)
+        {
+            _startWebApi = startWebApi;
+            _client = new ClientApi(_startWebApi._addres);
+        }
 
         [ObservableProperty]
         private string selectedPath = "Выберите файл или папку...";
@@ -83,8 +85,6 @@ namespace MauiUiApp.ViewModels
         {
             var tasks = new List<Task<string>>();
 
-            IServiceFactory creator = new serviceFactoryForPDF();
-
             if (paths !=null)
             {
                 Blocks.Clear();
@@ -94,7 +94,8 @@ namespace MauiUiApp.ViewModels
 
                 foreach (string path in paths)
                 {
-                    tasks.Add(creator.CreateProcessingParsing(path));
+                    var dto = await FileUploadDto.FromPathAsync(path);
+                    tasks.Add(_client.PostAsync("/ParsingPDF/upload", dto));
                 }
 
                 while (tasks.Any())
@@ -102,11 +103,18 @@ namespace MauiUiApp.ViewModels
                     var completedTask = await Task.WhenAny(tasks);
                     tasks.Remove(completedTask);
 
-                    var result = await completedTask;
-                    
-                    await ButtonBlocks(result.Split(' ')[0], result.Split(' ')[1], result.Split(' ')[2]);
+                    var jsonResponse = await completedTask;
+
+                    var result = JsonSerializer.Deserialize<dynamic>(jsonResponse);
+
+                    string fileName = result.GetProperty("fileName").GetString();
+                    string arg1 = result.GetProperty("arg1").GetString();
+                    string arg2 = result.GetProperty("arg2").GetString();
+
+                    await ButtonBlocks(fileName, arg1, arg2);
                     ProgressValue += progress_step;
                 }
+
             }
         }
 
