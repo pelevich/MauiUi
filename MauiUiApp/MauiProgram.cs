@@ -1,7 +1,8 @@
 ﻿using ApplicationService.Domain;
 using ApplicationService.Service.serviceFactory;
 using CommunityToolkit.Maui;
-using MauiUiApp.ViewModels;
+using MauiUiApp.ViewModels.AuthViewModel;
+using MauiUiApp.ViewModels.MainViewModel;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;

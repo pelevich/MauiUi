@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-namespace MauiUiApp.ViewModels
+namespace MauiUiApp.ViewModels.MainViewModel
 {
     public partial class MainViewModel : ObservableObject
     {

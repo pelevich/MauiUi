@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MauiUiApp.ViewModels
+namespace MauiUiApp.ViewModels.MainViewModel
 {
     public interface IBrowseButton
     {

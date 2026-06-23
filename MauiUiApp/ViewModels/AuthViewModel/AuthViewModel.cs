@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.Diagnostics;
 using System.Text.Json;
 
-namespace MauiUiApp.ViewModels
+namespace MauiUiApp.ViewModels.AuthViewModel
 {
     public partial class AuthViewModel : ObservableObject
     {

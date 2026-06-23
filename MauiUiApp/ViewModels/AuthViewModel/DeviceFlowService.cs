@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 
-namespace MauiUiApp.ViewModels
+namespace MauiUiApp.ViewModels.AuthViewModel
 {
     public class DeviceFlowService
     {

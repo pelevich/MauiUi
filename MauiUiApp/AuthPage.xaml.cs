@@ -1,4 +1,4 @@
-using MauiUiApp.ViewModels;
+using MauiUiApp.ViewModels.AuthViewModel;
 
 namespace MauiUiApp;
 
