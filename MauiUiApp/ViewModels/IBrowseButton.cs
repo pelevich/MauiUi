@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MauiUiApp.ViewModels
 {
-    internal interface IBrowseButton
+    public interface IBrowseButton
     {
         public Task<List<string>> PickFile();
     }

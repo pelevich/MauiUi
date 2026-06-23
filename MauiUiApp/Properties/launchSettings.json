@@ -4,5 +4,11 @@
       "commandName": "Project",
       "nativeDebugging": false
     }
+  },
+
+  "Keycloak": {
+    "Authority": "http://localhost:8080",
+    "Realm": "master",
+    "ClientId": "myapi"
   }
 }

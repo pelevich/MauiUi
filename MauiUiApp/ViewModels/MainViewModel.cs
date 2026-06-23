@@ -1,22 +1,25 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using ApplicationService.Service;
+using ApplicationService.Service.serviceFactory;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MauiUiApp.Application;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Net.Http.Headers;
-using System.Text.Json;
 
 namespace MauiUiApp.ViewModels
 {
     public partial class MainViewModel : ObservableObject
     {
-        private readonly StartWebApi _startWebApi;
-        private readonly ClientApi _client;
 
-        public MainViewModel(StartWebApi startWebApi)
+        private readonly IServiceFactory _creator;
+        private readonly IBrowseButton _browseButtonFile;
+        private readonly IBrowseButton _browseButtonFolder;
+
+        public MainViewModel(IServiceFactory ServiceFactory, IEnumerable<IBrowseButton> BrowseButton)
         {
-            _startWebApi = startWebApi;
-            _client = new ClientApi(_startWebApi._addres);
+            _creator = ServiceFactory;
+            var buttons = BrowseButton.ToList();
+            _browseButtonFile = buttons[0];
+            _browseButtonFolder = buttons[1];
         }
 
         [ObservableProperty]
@@ -56,9 +59,7 @@ namespace MauiUiApp.ViewModels
         [RelayCommand]
         private async Task BrowseButtonFile()
         {
-            IBrowseButton creator = new BrowseButtonFile();
-
-            var result = await creator.PickFile();
+            var result = await _browseButtonFile.PickFile();
 
             SaveData(result);
         }
@@ -69,9 +70,7 @@ namespace MauiUiApp.ViewModels
         [RelayCommand]
         private async Task BrowseButtonFolder()
         {
-            IBrowseButton creator = new BrowseButtonFolder();
-
-            var result = await creator.PickFile();
+            var result = await _browseButtonFolder.PickFile();
 
             SaveData(result);
         }
@@ -95,7 +94,7 @@ namespace MauiUiApp.ViewModels
                 foreach (string path in paths)
                 {
                     var dto = await FileUploadDto.FromPathAsync(path);
-                    tasks.Add(_client.PostAsync("/ParsingPDF/upload", dto));
+                    tasks.Add(_creator.CreateProcessingParsing(dto.FileData, dto.Length));
                 }
 
                 while (tasks.Any())
@@ -103,13 +102,11 @@ namespace MauiUiApp.ViewModels
                     var completedTask = await Task.WhenAny(tasks);
                     tasks.Remove(completedTask);
 
-                    var jsonResponse = await completedTask;
-
-                    var result = JsonSerializer.Deserialize<dynamic>(jsonResponse);
-
-                    string fileName = result.GetProperty("fileName").GetString();
-                    string arg1 = result.GetProperty("arg1").GetString();
-                    string arg2 = result.GetProperty("arg2").GetString();
+                    var result = await completedTask;
+                    
+                    string fileName = "blank";
+                    string arg1 = result.Split(' ')[0];
+                    string arg2 = result.Split(' ')[1];
 
                     await ButtonBlocks(fileName, arg1, arg2);
                     ProgressValue += progress_step;

@@ -9,6 +9,7 @@ namespace MauiUiApp.Application
         public byte[] FileData { get; private set; }
         public string FileName { get; private set; }
         public string fileFieldName { get; private set; }
+        public int Length { get; private set; }
 
         // <summary>
         //DTO для файлов от UI к Api
@@ -23,12 +24,14 @@ namespace MauiUiApp.Application
             if (!File.Exists(filePath))
                 throw new FileNotFoundException($"Файл не найден: {filePath}");
 
+            byte[] fileData = await File.ReadAllBytesAsync(filePath);
 
             var dto = new FileUploadDto
             {
                 FileName = Path.GetFileName(filePath),
-                FileData = await File.ReadAllBytesAsync(filePath),
-                fileFieldName = "file"
+                FileData = fileData,
+                fileFieldName = "file",
+                Length = fileData.Length
             };
 
             return dto;

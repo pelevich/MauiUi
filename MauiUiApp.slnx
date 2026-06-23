@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="../ApplicationService/ApplicationService.Service/ApplicationService.Service.csproj" />
   <Project Path="MauiUiApp.Application/MauiUiApp.Application.csproj" Id="f5795731-af15-46bd-a91c-fb804f9382c1" />
   <Project Path="MauiUiApp.Domain/MauiUiApp.Domain.csproj" Id="354e2e2b-c3b2-4702-8902-f5af0883fbb3" />
   <Project Path="MauiUiApp/MauiUiApp.csproj" />
