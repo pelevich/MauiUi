@@ -4,6 +4,7 @@ using CommunityToolkit.Maui;
 using MauiUiApp.ViewModels.AuthViewModel;
 using MauiUiApp.ViewModels.MainViewModel;
 using Microsoft.Extensions.Configuration;
+using System.Reflection;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
@@ -15,18 +16,6 @@ namespace MauiUiApp
         {
             var builder = MauiApp.CreateBuilder();
 
-            var inMemorySettings = new Dictionary<string, string>
-            {
-                ["Keycloak:Authority"] = "http://localhost:8080",
-                ["Keycloak:Realm"] = "master",
-                ["Keycloak:ClientId"] = "mymauiapp"
-            };
-
-            var configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(inMemorySettings)
-                .Build();
-
-            builder.Configuration.AddConfiguration(configuration);
 
             builder
                 .UseMauiApp<App>()
@@ -36,6 +25,15 @@ namespace MauiUiApp
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
+
+            var a = Assembly.GetExecutingAssembly();
+            using var stream = a.GetManifestResourceStream("MauiUiApp.appsettings.json");
+
+            var config = new ConfigurationBuilder()
+                        .AddJsonStream(stream)
+                        .Build();
+
+            builder.Configuration.AddConfiguration(config);
 
             //Зарегистрировал доп сервисы для DI 
             //Singleton так нужные одни общие данные

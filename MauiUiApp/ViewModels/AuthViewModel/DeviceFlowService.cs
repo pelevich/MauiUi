@@ -1,9 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using System.Text.Json;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace MauiUiApp.ViewModels.AuthViewModel
 {
@@ -21,7 +18,7 @@ namespace MauiUiApp.ViewModels.AuthViewModel
             _clientId = configuration["Keycloak:ClientId"];
         }
 
-        public async Task<string> RequestDeviceCodeAsync()
+        public async Task<DeviceCodeRespones> RequestDeviceCodeAsync()
         {
             var url = $"{_keycloakUrl}/realms/{_realm}/protocol/openid-connect/auth/device";
             var parameters = new Dictionary<string, string>
@@ -34,7 +31,8 @@ namespace MauiUiApp.ViewModels.AuthViewModel
                 new FormUrlEncodedContent(parameters));
 
             var content = await response.Content.ReadAsStringAsync();
-            return content;
+            var deviceCodeRespones = JsonConvert.DeserializeObject<DeviceCodeRespones>(content);
+            return deviceCodeRespones;
         }
 
         public async Task<string> GetTokenAsync(string deviceCode, int expires_in, int interval)
@@ -57,11 +55,10 @@ namespace MauiUiApp.ViewModels.AuthViewModel
 
                 if (response.IsSuccessStatusCode)
                 {
-                    using JsonDocument document = JsonDocument.Parse(content);
-                    JsonElement result = document.RootElement;
-                    return result.GetProperty("access_token").GetString();
+                    string token = JObject.Parse(content)["access_token"]?.ToString();
+                    return token;
                 }
-                await Task.Delay(5000);
+                await Task.Delay(interval*1000);
             }
 
             return "Error";
